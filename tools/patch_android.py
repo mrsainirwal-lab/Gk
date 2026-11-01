@@ -3,22 +3,24 @@ import re
 
 p = "android/app/src/main/AndroidManifest.xml"
 s = open(p, encoding="utf-8").read()
+
+META = (
+    '<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" '
+    'android:value="ca-app-pub-3940256099942544~3347511713"/>'
+)
+
 if "com.google.android.gms.ads.APPLICATION_ID" not in s:
-    if "android.permission.INTERNET" not in s:
-        s = s.replace(
-            "<application",
-            '<uses-permission android:name="android.permission.INTERNET"/>\n    <application',
-            1,
-        )
-    s = re.sub(
-        r"(<application[^>]*>)",
-        r'\1\n        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" '
-        r'android:value="ca-app-pub-3940256099942544~3347511713"/>',
-        s,
-        count=1,
+    s = s.replace("</application>", "    " + META + "\n    </application>", 1)
+
+if "android.permission.INTERNET" not in s:
+    s = s.replace(
+        "<application",
+        '<uses-permission android:name="android.permission.INTERNET"/>\n    <application',
+        1,
     )
-    s = re.sub(r'android:label="[^"]*"', 'android:label="GK Coins"', s, count=1)
-    open(p, "w", encoding="utf-8").write(s)
+
+s = re.sub(r'android:label="[^"]*"', 'android:label="GK Coins"', s, count=1)
+open(p, "w", encoding="utf-8").write(s)
 
 for g in glob.glob("android/app/build.gradle*"):
     t = open(g, encoding="utf-8").read()
@@ -27,3 +29,4 @@ for g in glob.glob("android/app/build.gradle*"):
         open(g, "w", encoding="utf-8").write(t2)
 
 print("patched OK")
+print(s)
