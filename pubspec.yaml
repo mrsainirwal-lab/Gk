@@ -1,1 +1,16 @@
+name: gk_coins
+description: GK Quiz app with coins and rewarded ads.
+publish_to: "none"
+version: 1.0.0+1
 
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_mobile_ads: ^5.3.0
+  shared_preferences: ^2.2.3
+
+flutter:
+  uses-material-design: true
