@@ -15,9 +15,19 @@ const int kMinWithdrawCoins = 5000;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize();
+  ErrorWidget.builder = (d) => Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text('Error: ${d.exception}'),
+          ),
+        ),
+      );
   final prefs = await SharedPreferences.getInstance();
   runApp(MyApp(store: Store(prefs)));
+  try {
+    MobileAds.instance.initialize();
+  } catch (_) {}
 }
 
 String _fmt(DateTime d) => '${d.year}-${d.month}-${d.day}';
